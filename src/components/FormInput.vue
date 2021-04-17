@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center min-h-screen  dark:bg-gray-900">
+  <div class="min-h-screen dark:bg-gray-900">
     <div class="container mx-auto flex">
       <div class="max-w-md mx-auto my-10 bg-white p-5 rounded-md shadow-sm">
         <div class="text-center">
@@ -92,78 +92,107 @@
         </div>
       </div>
       <div class="mx-auto my-auto">
-       <pro-card></pro-card>
+        <pro-card></pro-card>
+      </div>
+    </div>
+
+    <div
+      class="container mx-auto bg-white overflow-hidden shadow-sm sm:rounded-lg"
+    >
+      <h1
+        class="my-3 text-3xl font-semibold ml-5 text-gray-700 dark:text-gray-200"
+      >
+        Contact | Feedback
+      </h1>
+
+      <div
+        class="p-4 max-w-xs shadow rounded m-4 dark:bg-gray-800 dark:text-gray-200"
+        v-for="contact in Contacts"
+        :key="contact.id"
+      >
+        <div>{{ contact }}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import ProCard from './ProCard.vue';
+import ProCard from "./ProCard.vue";
 export default {
   components: { ProCard },
   data() {
     return {
-      url: "http://localhost:5000/infos",
+      url: "http://localhost:5050/infos",
       name: "",
       email: "",
       phone: "",
       message: "",
       date: "",
       isEdit: false,
-      Contacts: []
-    }
+      Contacts: [],
+    };
   },
   methods: {
-    submitForm (){
+    submitForm() {
       var time = new Date();
       if (this.message !== "") {
-        if (this.isEdit) {
-          this.editContact({
-            id: this.editId,
-            date: time.toLocaleString("en-GB", { hour12: true }),
-            name: this.name,
-            email: this.email,
-            phone: this.phone,
-            message: this.message,
-          });
-        } else {
-          this.addNewContact({
-            date: time.toLocaleString("en-GB", { hour12: true }),
-            name: this.name,
-            email: this.email,
-            phone: this.phone,
-            message: this.message,
-          });
-        }
+        this.addNewContact({
+          date: time.toLocaleString("en-GB", { hour12: true }),
+          name: this.name,
+          email: this.email,
+          phone: this.phone,
+          message: this.message,
+        });
       }
-      this.name = "",
-      this.email = "",
-      this.phone = "",
-      this.message =  "",
-      this.date = ""
+        (this.name = ""),
+        (this.email = ""),
+        (this.phone = ""),
+        (this.message = ""),
+        (this.date = "");
     },
-          async addNewContact(newContact) {
-        try {
-          const res = await fetch(this.url, {
-            method: "POST",
-            headers: {
-              "content-type": "application/json",
-            },
-            body: JSON.stringify({
-              name: newContact.name,
-              date: newContact.date,
-              phone: newContact.phone,
-              message: newContact.message,
-              email: newContact.email
-            }),
-          });
-          const data = await res.json();
-          this.Contacts = [...this.Contacts, data];
-        } catch (error) {
-          console.log(`Could not save! ${error}`);
-        }
+    async addNewContact(newContact) {
+      try {
+        const res = await fetch(this.url, {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            name: newContact.name,
+            date: newContact.date,
+            phone: newContact.phone,
+            message: newContact.message,
+            email: newContact.email,
+          }),
+        });
+        const data = await res.json();
+        this.Contacts = [...this.Contacts, data];
+      } catch (error) {
+        console.log(`Could not save! ${error}`);
       }
+    },
+    async deleteData(id) {
+      try {
+        await fetch(`${this.url}/${id}`, {
+          method: "DELETE",
+        });
+        this.Contacts = this.Contacts.filter((suvrey) => suvrey.id !== id);
+      } catch (error) {
+        console.log(`Could not delete! ${error}`);
+      }
+    },
+    async getInfos() {
+      try {
+        const res = await fetch(this.url);
+        const data = await res.json();
+        return data;
+      } catch (error) {
+        console.log(`error ${error}`);
+      }
+    },
   },
-}
+  async created() {
+    this.Contacts = await this.getInfos();
+  },
+};
 </script>
