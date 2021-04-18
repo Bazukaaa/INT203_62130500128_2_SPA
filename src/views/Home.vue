@@ -1,21 +1,21 @@
 <template>
-  <div class="about bg-gray-300  min-w-screen min-h-screen px-5 py-5">
+<div class="bg-gray-300  min-w-screen min-h-screen px-5 py-5">
     <div class="min-h-screen  dark:bg-gray-900">
-      <div class="container mx-auto">
-        <div class="max-w-md mx-auto my-10 bg-white p-5 rounded-md shadow-sm">
-          <div class="text-center">
-            <h1
-              class="my-3 text-3xl font-semibold text-gray-700 dark:text-gray-200"
-            >
-              Contact Me
-            </h1>
-            <p class="text-gray-400 dark:text-gray-400">
-              Fill up the form below to send me a message.
-            </p>
-          </div>
-          <div class="m-7">
+        <div class="container mx-auto">
+            <div class="max-w-md mx-auto my-10 bg-white p-5 rounded-md shadow-sm">
+                <div class="text-center">
+                    <h1
+                        class="my-3 text-3xl font-semibold text-gray-700 dark:text-gray-200"
+                    >
+                        Contact Me
+                    </h1>
+                    <p class="text-gray-400 dark:text-gray-400">
+                        Fill up the form below to send me a message.
+                    </p>
+                </div>
+            <div class="m-7">
             <form @submit.prevent="submitForm" id="form">
-              <div class="mb-6">
+                <div class="mb-6">
                 <label
                   for="name"
                   class="block mb-2 text-sm text-gray-600 dark:text-gray-400"
@@ -23,7 +23,6 @@
                 >
                 <input
                   v-model="name"
-                  @blur="validating"
                   type="text"
                   name="name"
                   id="name"
@@ -31,8 +30,8 @@
                   required
                   class="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500"
                 />
-              </div>
-              <div class="mb-6">
+                </div>
+                <div class="mb-6">
                 <label
                   for="email"
                   class="block mb-2 text-sm text-gray-600 dark:text-gray-400"
@@ -40,7 +39,6 @@
                 >
                 <input
                   v-model="email"
-                  @blur="validating"
                   type="email"
                   name="email"
                   id="email"
@@ -48,7 +46,7 @@
                   required
                   class="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500"
                 />
-              </div>
+                </div>
               <div class="mb-6">
                 <label
                   for="phone"
@@ -57,7 +55,6 @@
                 >
                 <input
                   v-model="phone"
-                  @blur="validating"
                   type="text"
                   name="phone"
                   id="phone"
@@ -65,17 +62,15 @@
                   required
                   class="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500"
                 />
-              </div>
-              <div class="mb-6">
+                </div>
+                <div class="mb-6">
                 <label
                   for="message"
                   class="block mb-2 text-sm text-gray-600 dark:text-gray-400"
                   >Your Message</label
                 >
-
                 <textarea
                   v-model="message"
-                  @blur="validating"
                   rows="5"
                   name="message"
                   id="message"
@@ -83,11 +78,10 @@
                   class="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500"
                   required
                 ></textarea>
-              </div>
-              <div class="mb-6">
+                </div>
+                <div class="mb-6">
                 <button
                   type="submit"
-                  @click="validating"
                   class="w-full px-3 py-4 text-white bg-indigo-500 rounded-md focus:bg-indigo-600 focus:outline-none"
                 >
                   Send Message
@@ -98,21 +92,21 @@
           </div>
         </div>
         <div class="flex flex-wrap mt-36">
-          <div
+            <div
             class="max-w-xs  rounded m-4 dark:bg-gray-800 dark:text-gray-200"
             v-for="contact in Contacts"
             :key="contact.id"
-          >
+            >
             <contact-card
               :contact="contact"
               @click-edit="showData"
               @click-delete="deleteData"
             ></contact-card>
-          </div>
+            </div>
         </div>
-      </div>
+        </div>
     </div>
-  </div>
+</div>
 </template>
 
 <script>
@@ -136,6 +130,7 @@ export default {
     };
   },
   methods: {
+
     submitForm() {
         this.invalidInput = this.message === "" ? true : false;
       var time = new Date();
@@ -166,9 +161,6 @@ export default {
         this.date = "";
     },
 
-    validating() {
-      this.invalidInput = this.noteText === "" ? true : false;
-    },
 
     showData(oldContact) {
       this.isEdit = true;
@@ -179,6 +171,7 @@ export default {
       this.phone = oldContact.phone;
       this.message = oldContact.message;
     },
+
     async editContact(editingContact) {
       try {
         const res = await fetch(`${this.url}/${editingContact.id}`, {
@@ -211,6 +204,7 @@ export default {
         console.log(`Could not edit! ${error}`);
       }
     },
+
     async addNewContact(newContact) {
       try {
         const res = await fetch(this.url, {
@@ -232,6 +226,7 @@ export default {
         console.log(`Could not save! ${error}`);
       }
     },
+
     async deleteData(id) {
       try {
         await fetch(`${this.url}/${id}`, {
@@ -242,6 +237,7 @@ export default {
         console.log(`Could not delete! ${error}`);
       }
     },
+
     async getInfos() {
       try {
         const res = await fetch(this.url);
@@ -251,8 +247,8 @@ export default {
         console.log(`error ${error}`);
       }
     },
-
   },
+
   async created() {
     this.Contacts = await this.getInfos();
   },
