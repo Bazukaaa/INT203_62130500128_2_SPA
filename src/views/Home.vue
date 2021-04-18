@@ -23,6 +23,7 @@
                 >
                 <input
                   v-model="name"
+                  @blur="validating"
                   type="text"
                   name="name"
                   id="name"
@@ -39,6 +40,7 @@
                 >
                 <input
                   v-model="email"
+                  @blur="validating"
                   type="email"
                   name="email"
                   id="email"
@@ -55,6 +57,7 @@
                 >
                 <input
                   v-model="phone"
+                  @blur="validating"
                   type="text"
                   name="phone"
                   id="phone"
@@ -72,6 +75,7 @@
 
                 <textarea
                   v-model="message"
+                  @blur="validating"
                   rows="5"
                   name="message"
                   id="message"
@@ -83,6 +87,7 @@
               <div class="mb-6">
                 <button
                   type="submit"
+                  @click="validating"
                   class="w-full px-3 py-4 text-white bg-indigo-500 rounded-md focus:bg-indigo-600 focus:outline-none"
                 >
                   Send Message
@@ -126,15 +131,17 @@ export default {
       message: "",
       date: "",
       isEdit: false,
+      invalidInput: false,
       Contacts: [],
     };
   },
   methods: {
     submitForm() {
+        this.invalidInput = this.message === "" ? true : false;
       var time = new Date();
       if (this.message !== "") {
         if (this.isEdit) {
-          this.editNote({
+          this.editContact({
             id: this.editId,
             date: time.toLocaleString("en-GB", { hour12: true }),
             name: this.name,
@@ -158,6 +165,11 @@ export default {
         this.message = "";
         this.date = "";
     },
+
+    validating() {
+      this.invalidInput = this.noteText === "" ? true : false;
+    },
+
     showData(oldContact) {
       this.isEdit = true;
       this.editId = oldContact.id;
